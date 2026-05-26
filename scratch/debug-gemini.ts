@@ -1,0 +1,72 @@
+import fs from 'fs';
+import path from 'path';
+
+// Load env vars manually from .env.local
+let apiKey = '';
+try {
+  const envPath = path.resolve(process.cwd(), '.env.local');
+  if (fs.existsSync(envPath)) {
+    const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+    lines.forEach(line => {
+      const parts = line.split('=');
+      if (parts.length >= 2) {
+        const key = parts[0].trim();
+        const val = parts.slice(1).join('=').trim().replace(/^['"]|['"]$/g, '');
+        if (key === 'GEMINI_API_KEY') {
+          apiKey = val;
+        }
+      }
+    });
+  }
+} catch (e) {
+  console.warn('Failed to parse .env.local:', e);
+}
+
+if (!apiKey) {
+  console.error('GEMINI_API_KEY not found in .env.local');
+  process.exit(1);
+}
+
+async function debugGemini() {
+  const model = 'gemini-3.5-flash';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  
+  const testPrompt = `You are a fact-checking assistant. Return a valid JSON array of 15 items. Just reply with JSON array containing 15 objects.
+  [
+    {"item": 1},
+    {"item": 2},
+    {"item": 3},
+    {"item": 4},
+    {"item": 5},
+    {"item": 6},
+    {"item": 7},
+    {"item": 8},
+    {"item": 9},
+    {"item": 10},
+    {"item": 11},
+    {"item": 12},
+    {"item": 13},
+    {"item": 14},
+    {"item": 15}
+  ]`;
+
+  console.log('Sending request to Gemini...');
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: testPrompt }] }],
+      generationConfig: {
+        temperature: 0.1,
+        maxOutputTokens: 4096,
+      },
+    }),
+  });
+
+  console.log('Response status:', res.status);
+  const data = await res.json();
+  console.log('Response body keys:', Object.keys(data));
+  console.log('Candidates structure:', JSON.stringify(data.candidates, null, 2));
+}
+
+debugGemini().catch(console.error);

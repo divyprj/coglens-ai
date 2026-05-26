@@ -1,0 +1,3 @@
+# Gemini API Key
+# Store your Google Gemini API key in the GEMINI_API_KEY environment variable.
+# Do NOT commit actual keys to version control.

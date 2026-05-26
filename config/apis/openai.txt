@@ -1,0 +1,3 @@
+# OpenAI API Key
+# Store your OpenAI API key in the OPENAI_API_KEY environment variable.
+# Do NOT commit actual keys to version control.

@@ -1,0 +1,3 @@
+# Serper API Key
+# Store your Serper API key in the SERPER_API_KEY environment variable.
+# Do NOT commit actual keys to version control.

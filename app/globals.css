@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────
+   CogLens Design System — Tailwind CSS v4
+   ────────────────────────────────────────────── */
+
+@theme {
+  /* Colors — --color-coglens-* generates bg-coglens-*, text-coglens-*, border-coglens-* utilities */
+  --color-coglens-bg: #0B0B0B;
+  --color-coglens-surface: #121212;
+  --color-coglens-card: #181818;
+  --color-coglens-border: rgba(255, 255, 255, 0.06);
+  --color-coglens-primary: #F5F5F5;
+  --color-coglens-secondary: #9CA3AF;
+  --color-coglens-muted: #6B7280;
+  --color-coglens-accent: #D6D6D6;
+  --color-coglens-success: #22C55E;
+  --color-coglens-warning: #F59E0B;
+  --color-coglens-error: #EF4444;
+
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Animation */
+  --animate-shimmer: shimmer 2s infinite linear;
+}
+
+/* Shimmer animation for loading skeletons */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   Base Styles
+   ────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-coglens-bg);
+  color: var(--color-coglens-primary);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(214, 214, 214, 0.2);
+  color: var(--color-coglens-primary);
+}
+
+/* Focus ring — accessible, subtle */
+:focus-visible {
+  outline: 1.5px solid var(--color-coglens-accent);
+  outline-offset: 2px;
+}
+
+/* ──────────────────────────────────────────────
+   Scrollbar
+   ────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}
+
+/* ──────────────────────────────────────────────
+   Utility: Shimmer skeleton
+   ────────────────────────────────────────────── */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-coglens-card) 25%,
+    rgba(255, 255, 255, 0.04) 50%,
+    var(--color-coglens-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 6px;
+}

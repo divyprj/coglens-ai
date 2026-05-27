@@ -5,10 +5,12 @@ import {
   useContext,
   useState,
   useCallback,
+  useEffect,
   useRef,
   type ReactNode,
 } from 'react';
 import type { VerificationResult } from './types';
+import { reportStorage, cleanupLegacyStorage, type ScanHistoryEntry } from './report-storage';
 
 /* ------------------------------------------------------------------ */
 /*  Pipeline stages for visual progress                                */
@@ -33,9 +35,19 @@ interface VerificationContextValue {
   stageIndex: number;
   stageLabel: string;
   error: string | null;
+  /** All persisted scan history entries, newest first. */
+  scanHistory: ScanHistoryEntry[];
   startVerification: (file: File) => Promise<void>;
   setResult: (result: VerificationResult) => void;
   clearResult: () => void;
+  /** Load a historical result by ID into currentResult. */
+  loadResult: (id: string) => boolean;
+  /** Delete a scan from persistent history. */
+  deleteScan: (id: string) => void;
+  /** Clear all scan history. */
+  clearHistory: () => void;
+  /** Refresh scanHistory from storage (e.g. after external mutation). */
+  refreshHistory: () => void;
 }
 
 const VerificationContext = createContext<VerificationContextValue | null>(null);
@@ -51,11 +63,22 @@ export function VerificationProvider({ children }: { children: ReactNode }) {
   const [stageIndex, setStageIndex] = useState(0);
   const [stageLabel, setStageLabel] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [scanHistory, setScanHistory] = useState<ScanHistoryEntry[]>([]);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Clean up legacy localStorage data and load session history on mount
+  useEffect(() => {
+    cleanupLegacyStorage();
+    setScanHistory(reportStorage.getAll());
+  }, []);
 
   const clearTimers = useCallback(() => {
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
+  }, []);
+
+  const refreshHistory = useCallback(() => {
+    setScanHistory(reportStorage.getAll());
   }, []);
 
   const startVerification = useCallback(
@@ -96,7 +119,13 @@ export function VerificationProvider({ children }: { children: ReactNode }) {
         clearTimers();
         setStageIndex(PIPELINE_STAGES.length);
         setStageLabel('Complete');
-        setCurrentResult(data as VerificationResult);
+
+        const result = data as VerificationResult;
+        setCurrentResult(result);
+
+        // Persist to local storage & refresh history
+        reportStorage.save(result);
+        setScanHistory(reportStorage.getAll());
       } catch (err) {
         clearTimers();
         let errMsg = err instanceof Error ? err.message : 'An unexpected error occurred.';
@@ -129,6 +158,35 @@ export function VerificationProvider({ children }: { children: ReactNode }) {
     setStageLabel('');
   }, []);
 
+  const loadResult = useCallback((id: string): boolean => {
+    const result = reportStorage.getById(id);
+    if (result) {
+      setCurrentResult(result);
+      setError(null);
+      return true;
+    }
+    // Payload missing (orphan manifest entry) — clean up
+    reportStorage.remove(id);
+    setScanHistory(reportStorage.getAll());
+    return false;
+  }, []);
+
+  const deleteScan = useCallback((id: string) => {
+    reportStorage.remove(id);
+    setScanHistory(reportStorage.getAll());
+    // If the deleted scan is currently displayed, clear it
+    setCurrentResult((prev) => {
+      if (prev && prev.document.id === id) return null;
+      return prev;
+    });
+  }, []);
+
+  const clearHistory = useCallback(() => {
+    reportStorage.clear();
+    setScanHistory([]);
+    setCurrentResult(null);
+  }, []);
+
   return (
     <VerificationContext.Provider
       value={{
@@ -137,9 +195,14 @@ export function VerificationProvider({ children }: { children: ReactNode }) {
         stageIndex,
         stageLabel,
         error,
+        scanHistory,
         startVerification,
         setResult,
         clearResult,
+        loadResult,
+        deleteScan,
+        clearHistory,
+        refreshHistory,
       }}
     >
       {children}

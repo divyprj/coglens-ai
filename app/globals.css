@@ -23,6 +23,7 @@
 
   /* Animation */
   --animate-shimmer: shimmer 2s infinite linear;
+  --animate-fade-up: fade-up 0.5s ease-out forwards;
 }
 
 /* Shimmer animation for loading skeletons */
@@ -32,6 +33,20 @@
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+/* Fade-up animation for scroll reveals */
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -47,6 +62,11 @@ html {
 
 body {
   background-color: var(--color-coglens-bg);
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    #0F0E0E 0%,
+    #0B0B0B 100%
+  );
   color: var(--color-coglens-primary);
   font-family: var(--font-sans);
   min-height: 100dvh;
@@ -106,4 +126,30 @@ body {
   background-size: 200% 100%;
   animation: var(--animate-shimmer);
   border-radius: 6px;
+}
+
+/* ──────────────────────────────────────────────
+   Utility: Glassmorphism
+   ────────────────────────────────────────────── */
+
+.glass {
+  background: rgba(18, 18, 18, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-subtle {
+  background: rgba(18, 18, 18, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ──────────────────────────────────────────────
+   Utility: Fade-up reveal
+   ────────────────────────────────────────────── */
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out forwards;
 }

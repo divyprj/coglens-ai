@@ -51,39 +51,41 @@ ${documentText}`;
 
   // Try Groq first
   if (process.env.GROQ_API_KEY) {
+    console.log('[provider] Extracting claims using Groq (Primary)...');
     try {
       const response = await callGroq(prompt);
       const claims = parseClaimsResponse(response);
       if (claims && claims.length > 0) {
-        console.log(`[extract] Successfully extracted ${claims.length} claims using Groq.`);
+        console.log(`[provider] Successfully extracted ${claims.length} claims using Groq.`);
         return claims;
       }
     } catch (err) {
-      console.warn('[extract] Groq claim extraction failed, trying Gemini...', err);
+      console.warn('[provider] Groq claim extraction failed, falling back to Gemini...', err);
     }
   } else {
-    console.log('[extract] GROQ_API_KEY not configured, trying Gemini...');
+    console.log('[provider] GROQ_API_KEY not configured, trying Gemini fallback...');
   }
 
   // Try Gemini next
   if (process.env.GEMINI_API_KEY) {
+    console.log('[provider] Extracting claims using Gemini (Fallback)...');
     try {
       const response = await callGemini(prompt);
       const claims = parseClaimsResponse(response);
       if (claims && claims.length > 0) {
-        console.log(`[extract] Successfully extracted ${claims.length} claims using Gemini.`);
+        console.log(`[provider] Successfully extracted ${claims.length} claims using Gemini.`);
         return claims;
       }
     } catch (err) {
-      console.warn('[extract] Gemini claim extraction failed, falling back to local heuristic...', err);
+      console.warn('[provider] Gemini claim extraction failed, falling back to local heuristic...', err);
     }
   } else {
-    console.log('[extract] GEMINI_API_KEY not configured, falling back to local heuristic...');
+    console.log('[provider] GEMINI_API_KEY not configured, falling back to local heuristic...');
   }
 
   // Final fallback: Local sentence-splitting heuristic
+  console.log('[provider] Using Local Heuristic (Final Fallback)...');
   const localClaims = extractClaimsLocal(documentText);
-  console.log(`[extract] Extracted ${localClaims.length} claims using local heuristics.`);
   return localClaims;
 }
 

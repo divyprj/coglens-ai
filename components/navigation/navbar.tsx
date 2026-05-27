@@ -16,7 +16,7 @@ const navLinks: NavLink[] = [
   { label: 'Workflow', href: '#workflow' },
   {
     label: 'GitHub',
-    href: 'https://github.com',
+    href: 'https://github.com/divyprj/coglens-ai',
     external: true,
   },
 ];

@@ -40,6 +40,12 @@ function getScoreLabel(score: number): string {
   return "Low";
 }
 
+function getScoreBadgeClasses(score: number): string {
+  if (score > 70) return "bg-coglens-success/10 text-coglens-success";
+  if (score >= 40) return "bg-coglens-warning/10 text-coglens-warning";
+  return "bg-coglens-error/10 text-coglens-error";
+}
+
 const heightMap: Record<string, string> = {
   sm: "h-1.5",
   md: "h-2",
@@ -94,7 +100,7 @@ function TrustScore({
           )}
         </div>
         <span
-          className={`text-xs font-medium px-2 py-0.5 rounded-full ${getScoreColor(clampedScore)}/10 ${getScoreTextColor(clampedScore)}`}
+          className={`text-xs font-medium px-2 py-0.5 rounded-full ${getScoreBadgeClasses(clampedScore)}`}
         >
           {getScoreLabel(clampedScore)}
         </span>

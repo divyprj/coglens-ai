@@ -1,4 +1,6 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ──────────────────────────────────────────────────────────
+# CogLens .gitignore
+# ──────────────────────────────────────────────────────────
 
 # dependencies
 /node_modules
@@ -23,6 +25,7 @@
 # misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # debug
 npm-debug.log*
@@ -30,12 +33,23 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# environment files
+.env
+.env.*
+!.env.example
 
 # vercel
 .vercel
 
-# typescript
+# typescript build
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch/debug scripts (dev only)
+/scratch/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

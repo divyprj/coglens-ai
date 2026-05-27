@@ -206,31 +206,37 @@ No markdown code blocks, no other text.`;
 
   try {
     let response = '';
-    let providerUsed = 'groq';
+    let providerUsed = '';
 
     if (process.env.GROQ_API_KEY) {
+      console.log('[provider] Verifying claims using Groq (Primary)...');
       try {
         response = await callGroq(prompt);
-        providerUsed = 'groq';
+        providerUsed = 'Groq';
       } catch (err) {
-        console.warn('[verify] Groq verification failed, trying Gemini...', err);
+        console.warn('[provider] Groq verification failed, trying Gemini fallback...', err);
       }
+    } else {
+      console.log('[provider] GROQ_API_KEY not configured, trying Gemini fallback...');
     }
 
     if (!response && process.env.GEMINI_API_KEY) {
+      console.log('[provider] Verifying claims using Gemini (Fallback)...');
       try {
         response = await callGemini(prompt);
-        providerUsed = 'gemini';
+        providerUsed = 'Gemini';
       } catch (err) {
-        console.warn('[verify] Gemini verification failed...', err);
+        console.warn('[provider] Gemini verification failed...', err);
       }
+    } else if (!response) {
+      console.log('[provider] GEMINI_API_KEY not configured for verification fallback...');
     }
 
     if (!response) {
       throw new Error('All AI verification providers failed.');
     }
 
-    console.log(`[verify] Raw response from ${providerUsed}:\n`, response);
+    console.log(`[provider] Verification complete using ${providerUsed}.`);
 
     // Parse JSON using robust bracket-matching
     const jsonStr = extractJsonArray(response);

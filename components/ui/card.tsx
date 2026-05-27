@@ -4,7 +4,7 @@ import React from "react";
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-type CardVariant = "default" | "elevated" | "interactive";
+type CardVariant = "default" | "elevated" | "interactive" | "glass";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant;
@@ -22,7 +22,9 @@ const variantStyles: Record<CardVariant, string> = {
   default: "",
   elevated: "shadow-lg shadow-black/30",
   interactive:
-    "transition-colors duration-200 hover:bg-white/[0.03] cursor-pointer",
+    "transition-all duration-300 hover:bg-white/[0.03] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 cursor-pointer",
+  glass:
+    "bg-coglens-card/60 backdrop-blur-xl border border-coglens-border",
 };
 
 /* ------------------------------------------------------------------ */

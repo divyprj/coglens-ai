@@ -24,7 +24,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-white/[0.08] text-coglens-primary hover:bg-white/[0.14] active:bg-white/[0.10]",
+    "bg-white/[0.08] text-coglens-primary hover:bg-white/[0.14] active:bg-white/[0.10] hover:shadow-[0_2px_12px_rgba(255,255,255,0.04)]",
   secondary:
     "bg-transparent text-coglens-secondary hover:text-coglens-primary hover:bg-white/[0.05] active:bg-white/[0.03]",
   outline:
@@ -67,11 +67,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || loading;
 
     const base =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 ease-out select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-coglens-bg";
+      "inline-flex items-center justify-center font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-coglens-bg";
 
     const disabledClass = isDisabled
       ? "opacity-40 pointer-events-none cursor-not-allowed"
-      : "cursor-pointer hover:scale-[1.01] active:scale-[0.98]";
+      : "cursor-pointer hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98]";
 
     const sizeClass = iconOnly
       ? iconOnlySizeStyles[size]

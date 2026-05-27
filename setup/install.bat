@@ -6,6 +6,9 @@ echo    Verify information with confidence.
 echo  ========================================
 echo.
 
+:: Navigate to project root
+cd /d "%~dp0.."
+
 echo  [1/3] Installing dependencies...
 call npm install
 if %errorlevel% neq 0 (

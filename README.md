@@ -568,6 +568,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 **Built for [Cog Culture](https://cogculture.in)**
 
-CogLens — AI-powered document verification, built with care.
+CogLens - AI-powered document verification, built with care.
 
 </div>

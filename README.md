@@ -38,10 +38,9 @@ In an era of synthetic content and information overload, CogLens provides a syst
 
 | Resource | Link |
 |----------|------|
-| **Deployed App** | [coglens.vercel.app](https://coglens-ai.vercel.app) |
-| **Source Code** | [github.com/suraj/CogLens](                ) |
+| **Deployed App** | [coglens.vercel.app](https://coglens-ai.vercel.app/) |
+| **Source Code** | [github.com/suraj/CogLens](https://github.com/divyprj/coglens-ai) |
 
-> Replace the URLs above with your actual deployment and repository links.
 
 ---
 
